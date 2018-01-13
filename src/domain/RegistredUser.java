@@ -5,51 +5,58 @@ import java.util.ArrayList;
 public class RegistredUser extends User {
 	
 	private String name;
-	private String email;
-	private String number;
-	private String password;
-	private ArrayList<Card> cards;
+	private String address;
+	private ArrayList<Book> ownBooks;
+	private ArrayList<Book> wantBooks;
 	
-	// Jogos de Interesse
-	
-	RegistredUser(String name, String email, String number, String password) {
-		super();
+	public RegistredUser(String email, String password, String name, String address) {
+		super(email, password);
 		this.name = name;
-		this.email = email;
-		this.number = number;
-		this.password = password;
+		this.address = address;
+		this.ownBooks = new ArrayList<Book>();
+		this.wantBooks = new ArrayList<Book>();
 	}
 	
-	String getName() {
-		return this.name;
+	public RegistredUser(String email, String password, String name, String address, ArrayList<Book> ownBooks, ArrayList<Book> wantBooks) {
+		super(email, password);
+		this.address = address;
+		this.ownBooks = ownBooks;
+		this.wantBooks = wantBooks;
 	}
 	
-	void setName(String name) {
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
 		this.name = name;
 	}
-	
-	String getEmail() {
-		return this.email;
+		
+	public String getAddress() {
+		return this.address;
 	}
 	
-	void setEmail(String email) {
-		this.email = email;
+	public void setAddress(String number) {
+		this.address = number;
 	}
-	
-	String getNumber() {
-		return this.number;
+
+	public ArrayList<Book> getOwnBooks() {
+		return ownBooks;
 	}
-	
-	void setNumber(String number) {
-		this.number = number;
+
+	public void setOwnBooks(ArrayList<Book> ownBooks) {
+		this.ownBooks = ownBooks;
 	}
-	
-	String getPassword() {
-		return this.password;
+
+	public ArrayList<Book> getWantBooks() {
+		return wantBooks;
 	}
-	
-	void setPassword(String password) {
-		this.password = password;
+
+	public void setWantBooks(ArrayList<Book> wantBooks) {
+		this.wantBooks = wantBooks;
 	}
-	
+	@Override
+	public String toString() {
+		return "\nEndereço :"+ this.address + " Email:  " + this.getEmail() + " Nome: " + this.name;
+	}
 }

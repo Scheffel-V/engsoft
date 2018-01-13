@@ -21,6 +21,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import domain.Book;
+import domain.RegistredUser;
 import managment.Controller;
 import utils.HintTextField;
 import javax.swing.JList;
@@ -39,23 +40,19 @@ import java.awt.event.ActionEvent;
 import javax.swing.JPopupMenu;
 import javax.swing.JCheckBoxMenuItem;
 
-public class MainUI {
+public class UserProfileUI {
 	private JFrame mainFrame;
 	private JPanel mainPanel;
-	private JTextField txtLivroRequeridoPara;
 	private JTextField titleField;
 	private JTextField authorField;
 	private JTextField genreField;
 	private JTextField isbnField;
 	private Book selectedBook;
-	private JRadioButton radioResearchUser;
-	private JRadioButton radioResearchBook;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JTextField editionField;
 	private JTextField languageField;
 	private JTextField commentField;
-	private JButton btnEdit;
-	private JButton btnDelete;
+	private JButton tradeButton;
 	private Book oldBook;
 	private JList list;
 	private ArrayList<Book> bookList;
@@ -69,11 +66,14 @@ public class MainUI {
 	private JList wantIist;
 	private JList wantList;
 	private ArrayList<Book> wantBookList;
+	private RegistredUser user;
+	private JButton offerButton;
 	
-	public MainUI(Controller controller) {
+	public UserProfileUI(Controller controller, RegistredUser user) {
+		this.user = user;
 		this.mainFrame = new JFrame();
 		mainFrame.setTitle("Registrar");
-		this.mainFrame.setSize(908, 771);
+		this.mainFrame.setSize(908, 497);
 		this.mainFrame.setUndecorated(true);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.mainFrame.setLocation(dim.width/2-this.mainFrame.getSize().width/2, dim.height/2-this.mainFrame.getSize().height/2);
@@ -120,6 +120,7 @@ public class MainUI {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				mainFrame.dispose();
+				controller.openMain();
 			}
 		});
 		label_2.setIcon(new ImageIcon(RegistrationUI.class.getResource("/utils/\u00EDndiceclose.png")));
@@ -129,123 +130,17 @@ public class MainUI {
 		JLabel lblKindler = new JLabel("Kindler");
 		lblKindler.setForeground(Color.LIGHT_GRAY);
 		lblKindler.setFont(new Font("Kalinga", Font.BOLD, 14));
-		lblKindler.setBounds(381, 2, 74, 23);
+		lblKindler.setBounds(418, 2, 74, 23);
 		mainPanel.add(lblKindler);
 		
-		JMenuBar menuBar = new JMenuBar();
-		menuBar.setForeground(Color.WHITE);
-		menuBar.setBorder(null);
-		menuBar.setBackground(Color.DARK_GRAY);
-		menuBar.setBounds(0, 36, 908, 21);
-		mainPanel.add(menuBar);
-		
-		JMenu mnNewMenu = new JMenu("Arquivo");
-		mnNewMenu.setFont(new Font("Segoe UI", Font.BOLD, 13));
-		mnNewMenu.setBorder(null);
-		mnNewMenu.setForeground(Color.LIGHT_GRAY);
-		menuBar.add(mnNewMenu);
-		
-		JSeparator separator = new JSeparator();
-		mnNewMenu.add(separator);
-		
-		JMenuItem mntmTeste = new JMenuItem("Logout");
-		mntmTeste.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				logout(controller);
-			}
-		});
-		mnNewMenu.add(mntmTeste);
-		
-		JMenuItem mntmSair = new JMenuItem("Sair");
-		mntmSair.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				mainFrame.dispose();
-			}
-		});
-		mnNewMenu.add(mntmSair);
-		
-		JMenu mnUsurios = new JMenu("Usu\u00E1rios");
-		mnUsurios.setBorder(null);
-		menuBar.add(mnUsurios);
-		mnUsurios.setForeground(Color.LIGHT_GRAY);
-		mnUsurios.setFont(new Font("Segoe UI", Font.BOLD, 13));
-		
-		JMenuItem mntmPesquisarUsurios_1 = new JMenuItem("Pesquisar usu\u00E1rios");
-		mntmPesquisarUsurios_1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				mainFrame.dispose();
-				controller.openSearchUser();
-			}
-		});
-		mnUsurios.add(mntmPesquisarUsurios_1);
-		
-		JMenu mnNewMenu_2 = new JMenu("Livros");
-		mnNewMenu_2.setFont(new Font("Segoe UI", Font.BOLD, 13));
-		mnNewMenu_2.setBorder(null);
-		mnNewMenu_2.setForeground(Color.LIGHT_GRAY);
-		menuBar.add(mnNewMenu_2);
-		
-		JMenuItem mntmAdcionarLivro = new JMenuItem("Adicionar livros que possuo");
-		mntmAdcionarLivro.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				addOwnBookToUser(controller);
-			}
-		});
-		
-		JMenuItem mntmPesquisarLivros = new JMenuItem("Pesquisar livros");
-		mntmPesquisarLivros.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				mainFrame.dispose();
-				controller.openSearchBook();
-			}
-		});
-		mnNewMenu_2.add(mntmPesquisarLivros);
-		
-		JSeparator separator_1 = new JSeparator();
-		mnNewMenu_2.add(separator_1);
-		mnNewMenu_2.add(mntmAdcionarLivro);
-		
-		JMenuItem mntmAdicionarLivrosQue = new JMenuItem("Adicionar livros que desejo");
-		mntmAdicionarLivrosQue.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				mainFrame.dispose();
-				controller.openAddWantBookToUser();
-			}
-		});
-		mnNewMenu_2.add(mntmAdicionarLivrosQue);
-		
-		JMenu mnTrocas = new JMenu("Trocas");
-		menuBar.add(mnTrocas);
-		mnTrocas.setForeground(Color.LIGHT_GRAY);
-		mnTrocas.setFont(new Font("Segoe UI", Font.BOLD, 13));
-		mnTrocas.setBorder(null);
-		
-		JMenuItem mntmConsultarTrocas = new JMenuItem("Consultar trocas");
-		mnTrocas.add(mntmConsultarTrocas);
-		
-		JMenu mnNewMenu_1 = new JMenu("Ajuda");
-		mnNewMenu_1.setFont(new Font("Segoe UI", Font.BOLD, 13));
-		mnNewMenu_1.setBorder(null);
-		mnNewMenu_1.setForeground(Color.LIGHT_GRAY);
-		menuBar.add(mnNewMenu_1);
-		
-		JMenuItem mntmTeste_1 = new JMenuItem("Sobre o Kindler");
-		mnNewMenu_1.add(mntmTeste_1);
-		
-		JLabel lblMeusLivros = new JLabel("Livros que possuo");
+		JLabel lblMeusLivros = new JLabel("Livros que o usu\u00E1rio possui");
 		lblMeusLivros.setForeground(Color.LIGHT_GRAY);
 		lblMeusLivros.setFont(new Font("Dialog", Font.BOLD, 13));
-		lblMeusLivros.setBounds(20, 68, 129, 23);
+		lblMeusLivros.setBounds(20, 68, 194, 23);
 		mainPanel.add(lblMeusLivros);
 		
 		ArrayList<Icon> iconList = new ArrayList<Icon>();
-		bookList = controller.getOwnBookList();
+		bookList = user.getOwnBooks();
 		if (bookList != null) {
 			for(Book book : bookList) {
 				iconList.add(new ImageIcon(MainUI.class.getResource("/utils/" + book.getPhoto())));
@@ -265,7 +160,7 @@ public class MainUI {
 				languageField.setText(bookList.get(list.getSelectedIndex()).getLanguage());
 				editionField.setText(bookList.get(list.getSelectedIndex()).getEdition());
 				commentField.setText(bookList.get(list.getSelectedIndex()).getComment());
-				//btnEdit.setEnabled(true);
+				tradeButton.setEnabled(true);
 			}
 		});
 		list.setBounds(148, 152, 1, 1);
@@ -283,32 +178,6 @@ public class MainUI {
 		}
 		Object[] iconList4 = {};
 		iconList4 = iconList3.toArray();
-		JList list2 = new JList(iconList4);
-		list2.addListSelectionListener(new ListSelectionListener() {
-
-			public void valueChanged(ListSelectionEvent arg0) {
-			}
-		});
-		list2.setBounds(148, 152, 1, 1);
-		list2.setVisibleRowCount(-1);
-		list2.setLayoutOrientation(JList.VERTICAL_WRAP);		
-		JScrollPane listScroller2 = new JScrollPane(list2);
-		listScroller2.setPreferredSize(new Dimension(250, 80));
-		listScroller2.setBounds(20, 516, 419, 212);
-		mainPanel.add(listScroller2);
-		
-		JLabel lblSugestesDeTrocas = new JLabel("Sugest\u00F5es de trocas do sistema");
-		lblSugestesDeTrocas.setForeground(Color.LIGHT_GRAY);
-		lblSugestesDeTrocas.setFont(new Font("Dialog", Font.BOLD, 13));
-		lblSugestesDeTrocas.setBounds(20, 493, 227, 23);
-		mainPanel.add(lblSugestesDeTrocas);
-		
-		txtLivroRequeridoPara = new JTextField();
-		txtLivroRequeridoPara.setEditable(false);
-		txtLivroRequeridoPara.setText("Livro requerido para a troca");
-		txtLivroRequeridoPara.setBounds(20, 735, 240, 20);
-		mainPanel.add(txtLivroRequeridoPara);
-		txtLivroRequeridoPara.setColumns(10);
 		
 		titleField = new JTextField();
 		titleField.setText("T\u00EDtulo");
@@ -338,34 +207,6 @@ public class MainUI {
 		isbnField.setBounds(20, 453, 222, 20);
 		mainPanel.add(isbnField);
 		
-		JButton btnResearch = new JButton("Pesquisar");
-		btnResearch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnResearch.setBounds(602, 605, 109, 23);
-		mainPanel.add(btnResearch);
-		btnResearch.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				research(controller);
-			}
-		});
-		
-		this.radioResearchUser = new JRadioButton("Usu\u00E1rios");
-		buttonGroup.add(radioResearchUser);
-		radioResearchUser.setForeground(Color.LIGHT_GRAY);
-		radioResearchUser.setBackground(Color.DARK_GRAY);
-		radioResearchUser.setBounds(732, 591, 109, 23);
-		mainPanel.add(radioResearchUser);
-		
-		this.radioResearchBook = new JRadioButton("Livros");
-		buttonGroup.add(radioResearchBook);
-		radioResearchBook.setForeground(Color.LIGHT_GRAY);
-		radioResearchBook.setBackground(Color.DARK_GRAY);
-		radioResearchBook.setBounds(732, 621, 109, 23);
-		mainPanel.add(radioResearchBook);
-		
 		editionField = new JTextField();
 		editionField.setText("Edi\u00E7\u00E3o");
 		editionField.setEditable(false);
@@ -387,44 +228,23 @@ public class MainUI {
 		commentField.setBounds(257, 420, 182, 20);
 		mainPanel.add(commentField);
 		
-		btnEdit = new JButton("Editar");
-		btnEdit.addActionListener(new ActionListener() {
+		tradeButton = new JButton("Propor troca");
+		tradeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(btnEdit.getText().equals("Editar")) {
-					btnDelete.setEnabled(true);
-					btnEdit.setText("Salvar");
-					oldBook = bookList.get(list.getSelectedIndex());
-				}else{
-					Book newBook = new Book(titleField.getText(), authorField.getText(), genreField.getText(), editionField.getText(), languageField.getText(), isbnField.getText(), oldBook.getPhoto(), commentField.getText());
-					if(controller.updateOwnBook(oldBook, newBook)) {
-						JOptionPane.showMessageDialog(null, "Livro atualizado!");
-						btnEdit.setText("Editar");
-						btnEdit.setEnabled(false);
-						btnDelete.setEnabled(false);
-						refreshOwnBookList(controller);
-					}else{
-						JOptionPane.showMessageDialog(null, "Falha ao atualizar livro.");
-					}
-				}
 			}
 		});
-		btnEdit.setEnabled(false);
-		btnEdit.setBounds(258, 452, 89, 23);
-		mainPanel.add(btnEdit);
+		tradeButton.setEnabled(false);
+		tradeButton.setBounds(257, 452, 182, 23);
+		mainPanel.add(tradeButton);
 		
-		btnDelete = new JButton("Excluir");
-		btnDelete.setEnabled(false);
-		btnDelete.setBounds(350, 452, 89, 23);
-		mainPanel.add(btnDelete);
-		
-		JLabel lblLivrosQueDesejo = new JLabel("Livros que desejo");
+		JLabel lblLivrosQueDesejo = new JLabel("Livros que o usu\u00E1rio deseja");
 		lblLivrosQueDesejo.setForeground(Color.LIGHT_GRAY);
 		lblLivrosQueDesejo.setFont(new Font("Dialog", Font.BOLD, 13));
-		lblLivrosQueDesejo.setBounds(461, 68, 129, 23);
+		lblLivrosQueDesejo.setBounds(461, 68, 194, 23);
 		mainPanel.add(lblLivrosQueDesejo);
 		
 		ArrayList<Icon> wantIconList = new ArrayList<Icon>();
-		wantBookList = controller.getWantBookList();
+		wantBookList = user.getWantBooks();
 		if (wantBookList != null) {
 			for(Book book : wantBookList) {
 				wantIconList.add(new ImageIcon(MainUI.class.getResource("/utils/" + book.getPhoto())));
@@ -444,7 +264,7 @@ public class MainUI {
 				languageField2.setText(wantBookList.get(wantList.getSelectedIndex()).getLanguage());
 				editionField2.setText(wantBookList.get(wantList.getSelectedIndex()).getEdition());
 				commentField2.setText(wantBookList.get(wantList.getSelectedIndex()).getComment());
-				//btnEdit.setEnabled(true);
+				offerButton.setEnabled(true);
 			}
 		});
 		wantList.setBounds(148, 152, 1, 1);
@@ -504,67 +324,30 @@ public class MainUI {
 		commentField2.setBounds(698, 418, 182, 20);
 		mainPanel.add(commentField2);
 		
-		JButton button = new JButton("Editar");
-		button.setEnabled(false);
-		button.setBounds(698, 450, 89, 23);
-		mainPanel.add(button);
+		offerButton = new JButton("Ofertar livro");
+		offerButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		offerButton.setEnabled(false);
+		offerButton.setBounds(698, 450, 182, 23);
+		mainPanel.add(offerButton);
 		
-		JButton button_1 = new JButton("Excluir");
-		button_1.setEnabled(false);
-		button_1.setBounds(791, 450, 89, 23);
-		mainPanel.add(button_1);
+		JLabel lblNome = new JLabel("Nome:" + user.getName());
+		lblNome.setForeground(Color.LIGHT_GRAY);
+		lblNome.setFont(new Font("Dialog", Font.BOLD, 13));
+		lblNome.setBounds(20, 45, 194, 23);
+		mainPanel.add(lblNome);
+		
+		JLabel lblEndereo = new JLabel("Endere\u00E7o:" + user.getAddress());
+		lblEndereo.setForeground(Color.LIGHT_GRAY);
+		lblEndereo.setFont(new Font("Dialog", Font.BOLD, 13));
+		lblEndereo.setBounds(461, 45, 194, 23);
+		mainPanel.add(lblEndereo);
 	}
 	
 	public void openUI() {
 		this.mainFrame.setVisible(true);
 	}
 	
-	private void logout(Controller controller) {
-		mainFrame.dispose();
-		controller.logout();
-	}
-	
-	private void addOwnBookToUser(Controller controller) {
-		mainFrame.dispose();
-		controller.openAddOwnBookToUser();
-	}
-	
-	private void addWantBookToUser(Controller controller) {
-		mainFrame.dispose();
-		controller.openAddWantBookToUser();
-	}
-	
-	private void research(Controller controller) {
-		Boolean user = this.radioResearchUser.isSelected();
-		Boolean book = this.radioResearchBook.isSelected();
-		
-		String typeOfResearch = new String();
-		if (user) {
-			typeOfResearch = "user";
-			mainFrame.dispose();
-			controller.research(typeOfResearch);
-		}
-		else if (book) {
-			typeOfResearch = "book";
-			JOptionPane.showMessageDialog(null, "Não implementado ainda.");	
-		} else {
-			JOptionPane.showMessageDialog(null, "Selecione o tipo da pesquisa.");
-		}
-	}
-
-	private void refreshOwnBookList(Controller controller) {
-		ArrayList<Icon> iconList = new ArrayList<Icon>();
-		bookList = controller.getOwnBookList();
-		if (bookList != null) {
-			for(Book book : bookList) {
-				iconList.add(new ImageIcon(MainUI.class.getResource("/utils/" + book.getPhoto())));
-			}
-		}
-		Object[] iconList2 = {};
-		iconList2 = iconList.toArray();
-		list = new JList(iconList2);
-		list.validate();
-		list.repaint();
-		list.clearSelection();
-	}
 }

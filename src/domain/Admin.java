@@ -1,8 +1,8 @@
 package domain;
 
-public class Admin extends RegistredUser {
+public class Admin extends User {
 	
-	Admin(String name, String email, String number, String password) {
-		super(name, email, number, password);
+	Admin(String username, String password) {
+		super(username, password);
 	}
 }
