@@ -1,6 +1,7 @@
 package domain;
 
 public class Book {
+	private Integer bookId;
 	private String title;
 	private String author;
 	private String genre;
@@ -83,5 +84,13 @@ public class Book {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public Integer getBookId() {
+		return bookId;
+	}
+
+	public void setBookId(Integer bookId) {
+		this.bookId = bookId;
 	}	
 }

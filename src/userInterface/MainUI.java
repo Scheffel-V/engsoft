@@ -7,6 +7,7 @@ import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.Icon;
@@ -32,8 +33,6 @@ import java.awt.BorderLayout;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.JRadioButton;
-import javax.swing.ButtonGroup;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPopupMenu;
@@ -42,15 +41,11 @@ import javax.swing.JCheckBoxMenuItem;
 public class MainUI {
 	private JFrame mainFrame;
 	private JPanel mainPanel;
-	private JTextField txtLivroRequeridoPara;
 	private JTextField titleField;
 	private JTextField authorField;
 	private JTextField genreField;
 	private JTextField isbnField;
 	private Book selectedBook;
-	private JRadioButton radioResearchUser;
-	private JRadioButton radioResearchBook;
-	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JTextField editionField;
 	private JTextField languageField;
 	private JTextField commentField;
@@ -73,7 +68,7 @@ public class MainUI {
 	public MainUI(Controller controller) {
 		this.mainFrame = new JFrame();
 		mainFrame.setTitle("Registrar");
-		this.mainFrame.setSize(908, 771);
+		this.mainFrame.setSize(908, 503);
 		this.mainFrame.setUndecorated(true);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.mainFrame.setLocation(dim.width/2-this.mainFrame.getSize().width/2, dim.height/2-this.mainFrame.getSize().height/2);
@@ -188,7 +183,7 @@ public class MainUI {
 		mnNewMenu_2.setForeground(Color.LIGHT_GRAY);
 		menuBar.add(mnNewMenu_2);
 		
-		JMenuItem mntmAdcionarLivro = new JMenuItem("Adicionar livros que possuo");
+		JMenuItem mntmAdcionarLivro = new JMenuItem("Livro a oferecer");
 		mntmAdcionarLivro.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -196,7 +191,7 @@ public class MainUI {
 			}
 		});
 		
-		JMenuItem mntmPesquisarLivros = new JMenuItem("Pesquisar livros");
+		JMenuItem mntmPesquisarLivros = new JMenuItem("Livro desejado");
 		mntmPesquisarLivros.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
@@ -220,13 +215,24 @@ public class MainUI {
 		});
 		mnNewMenu_2.add(mntmAdicionarLivrosQue);
 		
-		JMenu mnTrocas = new JMenu("Trocas");
+		JMenu mnTrocas = new JMenu("Propostas");
 		menuBar.add(mnTrocas);
 		mnTrocas.setForeground(Color.LIGHT_GRAY);
 		mnTrocas.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		mnTrocas.setBorder(null);
 		
-		JMenuItem mntmConsultarTrocas = new JMenuItem("Consultar trocas");
+		JMenuItem mntmConsultarTrocas = new JMenuItem("Consultar propostas");
+		mntmConsultarTrocas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				mainFrame.dispose();
+				try {
+					controller.openUserExchangeProposals();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		mnTrocas.add(mntmConsultarTrocas);
 		
 		JMenu mnNewMenu_1 = new JMenu("Ajuda");
@@ -248,7 +254,11 @@ public class MainUI {
 		bookList = controller.getOwnBookList();
 		if (bookList != null) {
 			for(Book book : bookList) {
-				iconList.add(new ImageIcon(MainUI.class.getResource("/utils/" + book.getPhoto())));
+				try{
+					iconList.add(new ImageIcon(MainUI.class.getResource("/utils/" + book.getPhoto())));
+				}catch (Exception e) {
+					iconList.add(new ImageIcon(MainUI.class.getResource("/utils/unkown.jpg")));
+				}
 			}
 		}
 		Object[] iconList2 = {};
@@ -283,32 +293,6 @@ public class MainUI {
 		}
 		Object[] iconList4 = {};
 		iconList4 = iconList3.toArray();
-		JList list2 = new JList(iconList4);
-		list2.addListSelectionListener(new ListSelectionListener() {
-
-			public void valueChanged(ListSelectionEvent arg0) {
-			}
-		});
-		list2.setBounds(148, 152, 1, 1);
-		list2.setVisibleRowCount(-1);
-		list2.setLayoutOrientation(JList.VERTICAL_WRAP);		
-		JScrollPane listScroller2 = new JScrollPane(list2);
-		listScroller2.setPreferredSize(new Dimension(250, 80));
-		listScroller2.setBounds(20, 516, 419, 212);
-		mainPanel.add(listScroller2);
-		
-		JLabel lblSugestesDeTrocas = new JLabel("Sugest\u00F5es de trocas do sistema");
-		lblSugestesDeTrocas.setForeground(Color.LIGHT_GRAY);
-		lblSugestesDeTrocas.setFont(new Font("Dialog", Font.BOLD, 13));
-		lblSugestesDeTrocas.setBounds(20, 493, 227, 23);
-		mainPanel.add(lblSugestesDeTrocas);
-		
-		txtLivroRequeridoPara = new JTextField();
-		txtLivroRequeridoPara.setEditable(false);
-		txtLivroRequeridoPara.setText("Livro requerido para a troca");
-		txtLivroRequeridoPara.setBounds(20, 735, 240, 20);
-		mainPanel.add(txtLivroRequeridoPara);
-		txtLivroRequeridoPara.setColumns(10);
 		
 		titleField = new JTextField();
 		titleField.setText("T\u00EDtulo");
@@ -337,34 +321,6 @@ public class MainUI {
 		isbnField.setColumns(10);
 		isbnField.setBounds(20, 453, 222, 20);
 		mainPanel.add(isbnField);
-		
-		JButton btnResearch = new JButton("Pesquisar");
-		btnResearch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnResearch.setBounds(602, 605, 109, 23);
-		mainPanel.add(btnResearch);
-		btnResearch.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				research(controller);
-			}
-		});
-		
-		this.radioResearchUser = new JRadioButton("Usu\u00E1rios");
-		buttonGroup.add(radioResearchUser);
-		radioResearchUser.setForeground(Color.LIGHT_GRAY);
-		radioResearchUser.setBackground(Color.DARK_GRAY);
-		radioResearchUser.setBounds(732, 591, 109, 23);
-		mainPanel.add(radioResearchUser);
-		
-		this.radioResearchBook = new JRadioButton("Livros");
-		buttonGroup.add(radioResearchBook);
-		radioResearchBook.setForeground(Color.LIGHT_GRAY);
-		radioResearchBook.setBackground(Color.DARK_GRAY);
-		radioResearchBook.setBounds(732, 621, 109, 23);
-		mainPanel.add(radioResearchBook);
 		
 		editionField = new JTextField();
 		editionField.setText("Edi\u00E7\u00E3o");
@@ -427,7 +383,11 @@ public class MainUI {
 		wantBookList = controller.getWantBookList();
 		if (wantBookList != null) {
 			for(Book book : wantBookList) {
-				wantIconList.add(new ImageIcon(MainUI.class.getResource("/utils/" + book.getPhoto())));
+				try{
+					wantIconList.add(new ImageIcon(MainUI.class.getResource("/utils/" + book.getPhoto())));
+				}catch (Exception e) {
+					wantIconList.add(new ImageIcon(MainUI.class.getResource("/utils/unkown.jpg")));
+				}
 			}
 		}
 		Object[] wantIconList2 = {};
@@ -532,24 +492,6 @@ public class MainUI {
 	private void addWantBookToUser(Controller controller) {
 		mainFrame.dispose();
 		controller.openAddWantBookToUser();
-	}
-	
-	private void research(Controller controller) {
-		Boolean user = this.radioResearchUser.isSelected();
-		Boolean book = this.radioResearchBook.isSelected();
-		
-		String typeOfResearch = new String();
-		if (user) {
-			typeOfResearch = "user";
-			mainFrame.dispose();
-			controller.research(typeOfResearch);
-		}
-		else if (book) {
-			typeOfResearch = "book";
-			JOptionPane.showMessageDialog(null, "Não implementado ainda.");	
-		} else {
-			JOptionPane.showMessageDialog(null, "Selecione o tipo da pesquisa.");
-		}
 	}
 
 	private void refreshOwnBookList(Controller controller) {

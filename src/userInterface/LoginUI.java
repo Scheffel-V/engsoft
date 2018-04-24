@@ -1,43 +1,24 @@
 package userInterface;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-
-import managment.Controller;
-
-import javax.swing.ImageIcon;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
-import java.awt.Toolkit;
-import java.awt.BorderLayout;
-import java.awt.Color;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+
+import managment.Controller;
 import utils.HintTextField;
 import utils.PasswordHintTextField;
-
-import java.awt.Font;
-
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.HeadlessException;
-import java.awt.Toolkit;
-
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.Font;
-import javax.swing.JTextField;
-
-import utils.HintTextField;
 
 public class LoginUI {
 	private JFrame mainFrame;
@@ -169,6 +150,7 @@ public class LoginUI {
 	
 	private boolean checkFields() {
 		Boolean username = this.usernameField.getText().trim().equals("");
+		@SuppressWarnings("deprecation")
 		Boolean password = this.pwdSenha.getText().trim().equals("");
 
 		if(username) {
@@ -187,6 +169,7 @@ public class LoginUI {
 		controller.openRegistration();
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void login(Controller controller) {
 		if(checkFields()) {
 			try {

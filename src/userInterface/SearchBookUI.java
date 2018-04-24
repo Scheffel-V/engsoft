@@ -171,8 +171,8 @@ public class SearchBookUI {
 		Boolean genre = genreField.getText().trim().equals("");
 		Boolean isbn = isbnField.getText().trim().equals("");
 		
-		controller.researchBooks(titleField.getText(), autorField.getText(), genreField.getText(), isbnField.getText());
+		ArrayList<Book> searchedBooks = controller.searchBooks(titleField.getText(), autorField.getText(), genreField.getText(), isbnField.getText());
 		mainFrame.dispose();
-		controller.openListBooks();
+		controller.openListBooks(searchedBooks);
 	}
 }

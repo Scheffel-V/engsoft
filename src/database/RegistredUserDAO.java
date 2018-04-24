@@ -45,7 +45,9 @@ public class RegistredUserDAO {
 	}	
 
 	public ArrayList<RegistredUser> searchByName(String name) {
-		String sql = "SELECT email,password,name,adress from registredusers where name like ? ";
+		String sql = "SELECT email from registredusers where name like ? ";
+		BookDAO bookDAO = new BookDAO();
+		BookDAO bookDAO2 = new BookDAO();
 		name = "%" + name + "%";
 		PreparedStatement stmt = null;
 		try {
@@ -53,25 +55,21 @@ public class RegistredUserDAO {
 			stmt.setString(1, name);
 			ResultSet resultSet = stmt.executeQuery();
 			ArrayList<RegistredUser> users = new ArrayList<RegistredUser>();
+			RegistredUser user = null;
 			while(resultSet.next()) {
-				ArrayList<String> valores = new ArrayList<String>();
-				valores.add(resultSet.getString(1));
-				valores.add(resultSet.getString(2));
-				valores.add(resultSet.getString(3));
-				valores.add(resultSet.getString(4));			
-				RegistredUser user = new RegistredUser(valores.get(0), valores.get(1), valores.get(2), valores.get(3));
+				user = this.readByEmail(resultSet.getString(1));
 				users.add(user);
 			}
 			return users;
 		} catch (SQLException e) {
-			System.err.println("Erro 1 " + e);
+			System.err.println("Erro SearchUserByName " + e);
 		} finally {
 			ConnectionFactory.closeConnection(con, stmt);
 		}
 		return null;
 	}
 
-	public RegistredUser read(String email) throws SQLException {
+	public RegistredUser readByEmail(String email) throws SQLException {
 		String sql = "SELECT email,password,name,adress from registredusers where email = ?";
 		PreparedStatement stmt = null;
 		
@@ -86,15 +84,19 @@ public class RegistredUserDAO {
 			valores.add(resultSet.getString(3));
 			valores.add(resultSet.getString(4));		
 			RegistredUser user = new RegistredUser(valores.get(0), valores.get(1), valores.get(2), valores.get(3));
+			BookDAO bookDAO = new BookDAO();
+			BookDAO bookDAO2 = new BookDAO();
+			user.setOwnBooks(bookDAO.readOwnBooks(valores.get(0)));
+			user.setWantBooks(bookDAO2.readWantBooks(valores.get(0)));
+			ExchangeProposalDAO exchangeProposalDAO = new ExchangeProposalDAO();
+			user.setProposals(exchangeProposalDAO.readUserProposals(valores.get(0)));
 			return user;
 		} catch (SQLException e) {
 			System.err.println("Erro 1 " + e);
 			if(e.getErrorCode() == 0){
 				throw e;
 			}
-		} finally {
-			ConnectionFactory.closeConnection(con, stmt);
-		}
+		} 
 		return null;
 	}
 }

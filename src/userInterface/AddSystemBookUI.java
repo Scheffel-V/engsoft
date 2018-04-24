@@ -1,6 +1,7 @@
 package userInterface;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
@@ -15,10 +16,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import managment.Controller;
-import utils.AddTypes;
 import utils.HintTextField;
 
-public class AddUserBookUI {
+public class AddSystemBookUI {
 	private JFrame mainFrame;
 	private JPanel mainPanel;
 	private HintTextField titleField;
@@ -29,10 +29,8 @@ public class AddUserBookUI {
 	private HintTextField photoField;
 	private HintTextField isbnField;
 	private HintTextField commentField;
-	private AddTypes option;
 	
-	public AddUserBookUI(Controller controller, AddTypes option) {
-		this.option = option;
+	public AddSystemBookUI(Controller controller) {
 		this.mainFrame = new JFrame();
 		mainFrame.setTitle("Registrar");
 		this.mainFrame.setSize(484, 363);
@@ -44,7 +42,7 @@ public class AddUserBookUI {
 		this.mainFrame.getContentPane().add(this.mainPanel);
 		mainPanel.setLayout(null);
 		
-		this.titleField = new HintTextField("Título");
+		this.titleField = new HintTextField("TÃ­tulo");
 		titleField.setForeground(Color.BLACK);
 		titleField.setFont(new Font("Tahoma", Font.BOLD, 13));
 		titleField.setBackground(Color.LIGHT_GRAY);
@@ -106,18 +104,18 @@ public class AddUserBookUI {
 		label_3.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				label_3.setIcon(new ImageIcon(AddUserBookUI.class.getResource("/utils/notebook (1).png")));
+				label_3.setIcon(new ImageIcon(AddSystemBookUI.class.getResource("/utils/notebook (1).png")));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				label_3.setIcon(new ImageIcon(AddUserBookUI.class.getResource("/utils/notebook.png")));
+				label_3.setIcon(new ImageIcon(AddSystemBookUI.class.getResource("/utils/notebook.png")));
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				addBook(controller);
+				registerBook(controller);
 			}
 		});
-		label_3.setIcon(new ImageIcon(AddUserBookUI.class.getResource("/utils/notebook.png")));
+		label_3.setIcon(new ImageIcon(AddSystemBookUI.class.getResource("/utils/notebook.png")));
 		label_3.setBounds(388, 263, 64, 75);
 		mainPanel.add(label_3);
 		
@@ -148,7 +146,7 @@ public class AddUserBookUI {
 		authorField.setBounds(257, 60, 195, 20);
 		mainPanel.add(authorField);
 		
-		genreField = new HintTextField("Gênero");
+		genreField = new HintTextField("Gï¿½nero");
 		genreField.setForeground(Color.BLACK);
 		genreField.setFont(new Font("Tahoma", Font.BOLD, 13));
 		genreField.setBorder(null);
@@ -156,7 +154,7 @@ public class AddUserBookUI {
 		genreField.setBounds(27, 105, 195, 20);
 		mainPanel.add(genreField);
 		
-		editionField = new HintTextField("Edição");
+		editionField = new HintTextField("Ediï¿½ï¿½o");
 		editionField.setForeground(Color.BLACK);
 		editionField.setFont(new Font("Tahoma", Font.BOLD, 13));
 		editionField.setBorder(null);
@@ -188,7 +186,7 @@ public class AddUserBookUI {
 		photoField.setBounds(27, 150, 195, 20);
 		mainPanel.add(photoField);
 		
-		commentField = new HintTextField("Comentário");
+		commentField = new HintTextField("Comentï¿½rio");
 		commentField.setForeground(Color.BLACK);
 		commentField.setFont(new Font("Tahoma", Font.BOLD, 13));
 		commentField.setBorder(null);
@@ -219,62 +217,46 @@ public class AddUserBookUI {
 		Boolean edition = this.editionField.getText().trim().equals("");
 		Boolean language = this.languageField.getText().trim().equals("");
 		Boolean photo = this.photoField.getText().trim().equals("");
+		Boolean isbn = this.isbnField.getText().trim().equals("");
 		
 		if(title) {
-			JOptionPane.showMessageDialog(null, "Informe um titulo valido.");
+			JOptionPane.showMessageDialog(null, "Informe um tï¿½tulo vï¿½lido.");
 			return false;
 		}
 		if(author) {
-			JOptionPane.showMessageDialog(null, "Informe um autor valido.");
+			JOptionPane.showMessageDialog(null, "Informe um autor vï¿½lido.");
 			return false;
 		}
 		if(genre) {
-			JOptionPane.showMessageDialog(null, "Informe um genero valido.");
+			JOptionPane.showMessageDialog(null, "Informe um gï¿½nero vï¿½lido.");
 			return false;
 		}
 		if(edition) {
-			JOptionPane.showMessageDialog(null, "Informe uma edicao valida.");
+			JOptionPane.showMessageDialog(null, "Informe uma ediï¿½ï¿½o vï¿½lida.");
 			return false;
 		}
 		if(language) {
-			JOptionPane.showMessageDialog(null, "Informe um idioma valido.");
+			JOptionPane.showMessageDialog(null, "Informe um idioma vï¿½lido.");
 			return false;
 		}
 		if(photo) {
-			JOptionPane.showMessageDialog(null, "Informe uma foto valida.");
+			JOptionPane.showMessageDialog(null, "Informe uma foto vï¿½lida.");
 			return false;
 		}
-
+		if(isbn) {
+			JOptionPane.showMessageDialog(null, "Informe um ISBN vï¿½lido.");
+			return false;
+		}
 		return true;
 	}
 	
-	public void addBook(Controller controller) {
+	private void registerBook(Controller controller) {
 		if(checkFields()) {
-			if(this.option == AddTypes.AddOwnedBook) {
-				if(controller.addOwnBook(titleField.getText(), authorField.getText(), genreField.getText(), editionField.getText(), languageField.getText(), isbnField.getText(), photoField.getText(), commentField.getText())) {
-					JOptionPane.showMessageDialog(null, "Livro adicionado com sucesso!");
-					cleanFields();
-				}else{
-					JOptionPane.showMessageDialog(null, "Falha ao adicionar livro.");
-				}	
-			}else{
-				if(controller.addWantBook(titleField.getText(), authorField.getText(), genreField.getText(), editionField.getText(), languageField.getText(), isbnField.getText(), photoField.getText(), commentField.getText())) {
-					JOptionPane.showMessageDialog(null, "Livro adicionado com sucesso!");
-					cleanFields();
-				}else{
-					JOptionPane.showMessageDialog(null, "Falha ao adicionar livro.");
-				}
-			}
-		}
-	}
-	
-	public void addWantBook(Controller controller) {
-		if(checkFields()) {
-			if(controller.addWantBook(titleField.getText(), authorField.getText(), genreField.getText(), editionField.getText(), languageField.getText(), isbnField.getText(), photoField.getText(), commentField.getText())) {
-				JOptionPane.showMessageDialog(null, "Livro adicionado com sucesso!");
+			if(controller.addOwnBook(titleField.getText(), authorField.getText(), genreField.getText(), editionField.getText(), languageField.getText(), isbnField.getText(), photoField.getText(), commentField.getText())) {
+				JOptionPane.showMessageDialog(null, "Livro cadastrado com sucesso!");
 				cleanFields();
 			}else{
-				JOptionPane.showMessageDialog(null, "Falha ao adicionar livro.");
+				JOptionPane.showMessageDialog(null, "Erro no cadastro do livro.");
 			}
 		}
 	}

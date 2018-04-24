@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.Font;
 import javax.swing.JTextField;
@@ -151,9 +152,10 @@ public class SearchUserUI {
 	
 	private void researchUsers(Controller controller) {
 		if(checkFields()) {
-			if(controller.researchUsers(nameField.getText())) {
+			ArrayList<RegistredUser> searchedUsers= controller.researchUsers(nameField.getText());
+			if(searchedUsers != null) {
 				mainFrame.dispose();
-				controller.openListUsers();
+				controller.openListUsers(searchedUsers);
 			} else{
 				JOptionPane.showMessageDialog(null, "Usuário não encontrado.");
 			}

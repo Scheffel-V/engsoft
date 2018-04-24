@@ -4,10 +4,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import domain.Book;
+import domain.ExchangeProposal;
 import domain.RegistredUser;
 
 public class DataBase {
 
+	public ArrayList<Book> searchBooks(String title, String autor, String genre, String isbn){
+		BookDAO bookDAO = new BookDAO();
+		return bookDAO.searchBooks(title, autor, genre, isbn);
+	}
+	
 	public boolean createRegistredUser(RegistredUser user) throws SQLException{
 		RegistredUserDAO userDAO = new RegistredUserDAO();
 		
@@ -25,7 +31,7 @@ public class DataBase {
 	public RegistredUser readRegistredUser(String username) throws SQLException{
 		RegistredUserDAO userDAO = new RegistredUserDAO();
 		try {
-			return userDAO.read(username);
+			return userDAO.readByEmail(username);
 		} catch (SQLException e) {
 			throw e;
 		}
@@ -56,23 +62,23 @@ public class DataBase {
 		return userDAO.searchByName(name);
 	}
 	
-	public boolean createOwnBook(Book book, String username) {
+	public boolean addOwnBook(Book book, String username) {
 		BookDAO bookDAO = new BookDAO();
-		if(bookDAO.createOwnBook(book, username)) {
+		if(bookDAO.addOwnBook(book, username)) {
 			return true;
 		}else{
 			return false;
 		}
 	}
-	
-	public ArrayList<Book> readBookList() {
-		BookDAO bookDAO = new BookDAO();
-		return bookDAO.readAll();
-	}
-	
+		
 	public ArrayList<Book> readOwnBookList(String username) {
 		BookDAO bookDAO = new BookDAO();
 		return bookDAO.readOwnBooks(username);
+	}
+	
+	public String readBookEmail(Book book) {
+		BookDAO bookDAO = new BookDAO();
+		return bookDAO.readBookEmail(book);
 	}
 	
 	public boolean updateOwnBook(Book oldBook, Book newBook, String username) {
@@ -80,9 +86,9 @@ public class DataBase {
 		return bookDAO.updateOwnBook(oldBook, newBook, username);
 	}
 	
-	public boolean createWantBook(Book book, String username) {
+	public boolean addWantBook(Book book, String username) {
 		BookDAO bookDAO = new BookDAO();
-		if(bookDAO.createWantBook(book, username)) {
+		if(bookDAO.addWantBook(book, username)) {
 			return true;
 		}else{
 			return false;
@@ -93,86 +99,34 @@ public class DataBase {
 		BookDAO bookDAO = new BookDAO();
 		return bookDAO.readWantBooks(email);
 	}
-
-	public ArrayList<Book> readBooks(String title, String autor, String genre, String isbn) {
+	
+	public boolean deleteOwnBook(Book book, String email) {
 		BookDAO bookDAO = new BookDAO();
-		return bookDAO.readBooks(title, autor, genre, isbn);
+		return bookDAO.delete(book, email);
 	}
 	
-	public ArrayList<Book> readBooks(String title, String autor, String genre) {
-		BookDAO bookDAO = new BookDAO();
-		return bookDAO.readBooks(title, autor, genre);
+	public boolean addExchangeProposal(ExchangeProposal exchangeProposal) {
+		ExchangeProposalDAO exchangeProposalDAO = new ExchangeProposalDAO();
+		return exchangeProposalDAO.createExchangeProposal(exchangeProposal);
 	}
 	
-	public ArrayList<Book> readBooks(String title, String autor) {
-		BookDAO bookDAO = new BookDAO();
-		return bookDAO.readBooks(title, autor);
+	public ArrayList<ExchangeProposal> readUserExchangeProposals(String email) {
+		ExchangeProposalDAO exchangeProposalDAO = new ExchangeProposalDAO();
+		return exchangeProposalDAO.readUserProposals(email);
 	}
 	
-	public ArrayList<Book> readBooks(String title) {
-		BookDAO bookDAO = new BookDAO();
-		return bookDAO.readBooks(title);
+	public boolean updateExchangeProposal(ExchangeProposal exchangeProposal) {
+		ExchangeProposalDAO exchangeProposalDAO = new ExchangeProposalDAO();
+		return exchangeProposalDAO.updateProposal(exchangeProposal);
 	}
 	
-	public ArrayList<Book> readBooks() {
-		BookDAO bookDAO = new BookDAO();
-		return bookDAO.readBooks();
-	}
-
-	public ArrayList<Book> readBooksByTitleAutorIsbn(String title, String autor, String isbn) {
-		BookDAO bookDAO = new BookDAO();
-		return bookDAO.readBooksByTitleAutorIsbn(title, autor, isbn);
-	}
-
-	public ArrayList<Book> readBooksByTitleGenreIsbn(String title, String genre, String isbn) {
-		BookDAO bookDAO = new BookDAO();
-		return bookDAO.readBooksByTitleGenreIsbn(title, genre, isbn);
-	}
-
-	public ArrayList<Book> readBooksByTitleGenre(String title, String genre) {
-		BookDAO bookDAO = new BookDAO();
-		return bookDAO.readBooksByTitleGenre(title, genre);
-	}
-
-	public ArrayList<Book> readBooksByTitleIsbn(String title, String isbn) {
-		BookDAO bookDAO = new BookDAO();
-		return bookDAO.readBooksByTitleIsbn(title, isbn);
-	}
-
-	public ArrayList<Book> readBooksByAutorGenreIsbn(String autor, String genre, String isbn) {
-		BookDAO bookDAO = new BookDAO();
-		return bookDAO.readBooksByAutorGenreIsbn(autor, genre, isbn);
-	}
-
-	public ArrayList<Book> readBooksByAutorGenre(String autor, String genre) {
-		BookDAO bookDAO = new BookDAO();
-		return bookDAO.readBooksByAutorGenre(autor, genre);
-	}
-
-	public ArrayList<Book> readBooksByAutorIsbn(String autor, String isbn) {
-		BookDAO bookDAO = new BookDAO();
-		return bookDAO.readBooksByAutorIsbn(autor, isbn);
-	}
-
-	public ArrayList<Book> readBooksByAutor(String autor) {
-		BookDAO bookDAO = new BookDAO();
-		return bookDAO.readBooksByAutor(autor);
-	}
-
-	public ArrayList<Book> readBooksByGenreIsbn(String genre, String isbn) {
-		BookDAO bookDAO = new BookDAO();
-		return bookDAO.readBooksByGenreIsbn(genre, isbn);
-	}
-
-	public ArrayList<Book> readBooksByGenre(String genre) {
-		BookDAO bookDAO = new BookDAO();
-		return bookDAO.readBooksByGenre(genre);
-	}
-
-	public ArrayList<Book> readBooksByIsbn(String isbn) {
-		BookDAO bookDAO = new BookDAO();
-		return bookDAO.readBooksByIsbn(isbn);
+	public boolean removeExchangeProposal(ExchangeProposal proposal){
+		ExchangeProposalDAO exchangeProposalDAO = new ExchangeProposalDAO();
+		return exchangeProposalDAO.deleteProposal(proposal);
 	}
 	
-	
+	public ArrayList<ExchangeProposal> readAceptedProposals() {
+		ExchangeProposalDAO exchangeProposalDAO = new ExchangeProposalDAO();
+		return exchangeProposalDAO.readAceptedProposals();
+	}
 }

@@ -29,6 +29,8 @@ import utils.PasswordHintTextField;
 import javax.swing.JScrollPane;
 import java.awt.Component;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ListBooksUI {
 	private JFrame mainFrame;
@@ -94,6 +96,7 @@ public class ListBooksUI {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				mainFrame.dispose();
+				controller.openMain();
 			}
 		});
 		label_2.setIcon(new ImageIcon(RegistrationUI.class.getResource("/utils/\u00EDndiceclose.png")));
@@ -116,7 +119,11 @@ public class ListBooksUI {
 		bookList = books;
 		if (bookList != null) {
 			for(Book book : bookList) {
-				iconList.add(new ImageIcon(MainUI.class.getResource("/utils/" + book.getPhoto())));
+				try{
+					iconList.add(new ImageIcon(MainUI.class.getResource("/utils/" + book.getPhoto())));
+				}catch (Exception e) {
+					iconList.add(new ImageIcon(MainUI.class.getResource("/utils/unkown.jpg")));
+				}
 			}
 		}
 		Object[] iconList2 = {};
@@ -194,6 +201,18 @@ public class ListBooksUI {
 		mainPanel.add(commentField);
 		
 		tradeButton = new JButton("Propor troca");
+		tradeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.setWantBookToTrade(bookList.get(list.getSelectedIndex()));
+				mainFrame.dispose();
+				try {
+					controller.openUserOwnBooks();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		tradeButton.setEnabled(false);
 		tradeButton.setBounds(263, 429, 182, 23);
 		mainPanel.add(tradeButton);
